@@ -1,9 +1,9 @@
 const express = require('express');
 var cors = require('cors')
-const DbConnection = require('./DbConnection')
-var connection = new DbConnection();
-connection.setConnection();
-database = connection.getConnection();
+// const DbConnection = require('./DbConnection')
+// var connection = new DbConnection();
+// connection.setConnection();
+// database = connection.getConnection();
 var request = require('request');
 
 const app = express(),
@@ -23,30 +23,30 @@ function requisicao(valor){
     });
 }
 
-function seleciona_dados(){
-  let c = "SELECT * FROM rota_unificada WHERE id_usuario=(SELECT MAX(id_usuario) FROM rota_unificada);"
-  database.query(c, (err, rows, inf)=>{
-    if(err){
-      console.log("Erro na seleção!");
-    }else{
-      console.log("Seleção feita!")
-      console.log(rows);
-      requisicao(rows);
-    }
-  });
-}
+// function seleciona_dados(){
+//   let c = "SELECT * FROM rota_unificada WHERE id_usuario=(SELECT MAX(id_usuario) FROM rota_unificada);"
+//   database.query(c, (err, rows, inf)=>{
+//     if(err){
+//       console.log("Erro na seleção!");
+//     }else{
+//       console.log("Seleção feita!")
+//       console.log(rows);
+//       requisicao(rows);
+//     }
+//   });
+// }
 
-function consulta_banco(consulta){
-  database.query(consulta, (err, rows, inf)=>{
-    console.log(consulta)
-    if(err){
-      console.log("Erro na inserção");
-    }else{
-      console.log("Inserção realizada!")
-      seleciona_dados()
-    }
-  });
-}
+// function consulta_banco(consulta){
+//   database.query(consulta, (err, rows, inf)=>{
+//     console.log(consulta)
+//     if(err){
+//       console.log("Erro na inserção");
+//     }else{
+//       console.log("Inserção realizada!")
+//       seleciona_dados()
+//     }
+//   });
+// }
 
 app.use(bodyParser.json());
 

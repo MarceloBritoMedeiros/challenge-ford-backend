@@ -50,6 +50,10 @@ function consulta_banco(consulta){
 
 app.use(bodyParser.json());
 
+app.get('/', (req,res) => {
+      res.send("Rodando na porta " + port);
+});      
+
 app.post('/api/book', (req, res) => {
     // console.log(res)
     //console.log(req)

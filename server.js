@@ -1,10 +1,7 @@
 const express = require('express');
 var cors = require('cors')
-// const DbConnection = require('./DbConnection')
-// var connection = new DbConnection();
-// connection.setConnection();
-// database = connection.getConnection();
 var request = require('request');
+var dados_dash;
 
 const app = express(),
       bodyParser = require("body-parser");
@@ -23,41 +20,13 @@ function requisicao(valor){
     });
 }
 
-// function seleciona_dados(){
-//   let c = "SELECT * FROM rota_unificada WHERE id_usuario=(SELECT MAX(id_usuario) FROM rota_unificada);"
-//   database.query(c, (err, rows, inf)=>{
-//     if(err){
-//       console.log("Erro na seleção!");
-//     }else{
-//       console.log("Seleção feita!")
-//       console.log(rows);
-//       requisicao(rows);
-//     }
-//   });
-// }
-
-// function consulta_banco(consulta){
-//   database.query(consulta, (err, rows, inf)=>{
-//     console.log(consulta)
-//     if(err){
-//       console.log("Erro na inserção");
-//     }else{
-//       console.log("Inserção realizada!")
-//       seleciona_dados()
-//     }
-//   });
-// }
-
 app.use(bodyParser.json());
 
 app.get('/', (req,res) => {
       res.send("Rodando na porta " + port);
 });      
 
-app.post('/api/book', (req, res) => {
-    // console.log(res)
-    //console.log(req)
-    //console.log("-------------------")
+app.post('/api/book', (req, res) => {    
     var horas = new Date().getHours()
     var minutos = new Date().getMinutes()
     var da;
@@ -65,41 +34,76 @@ app.post('/api/book', (req, res) => {
       da = `${horas}:00-${horas}:30`
     }else{
       da = `${horas}:30-${horas}:59`
-    }
-    //var da = `${new Date().getHours()+1}:${new Date().getMinutes()}`
+    }   
     console.log(da);
     var dados_recebidos = res.req.body;
     console.log(dados_recebidos);
     var x = res.req.body;
-    var consulta_main;
-    // consulta_main = `INSERT INTO rota_unificada(estado, cidade, faixa_idade, data_consulta, categoria,
-    //   flag_tem_carro,distancia_percorrida,tempo_viagem_carro,estado_porta_malas,tipo_transporte,finalidade,
-    //   flag_estrada)
-    // VALUES('SP', 'São Paulo', 
-    // '${x[0]}','${da}', '${dados_recebidos[dados_recebidos.length-1]}');`
-    
+        
     if(dados_recebidos[1]=="uso profissional"){      
-      consulta_main = `INSERT INTO rota_unificada(estado, cidade, faixa_idade, data_consulta, categoria,
-      tipo_transporte)
-      VALUES('SP', 'São Paulo', 
-      '${x[0]}','${da}', '${dados_recebidos[dados_recebidos.length-1]}', '${dados_recebidos[3]}');`
-      consulta_banco(consulta_main);          
-    }else if(dados_recebidos[2]=="Sim"){
-      consulta_main = `INSERT INTO rota_unificada(estado, cidade, faixa_idade, data_consulta, categoria,
-        flag_tem_carro,distancia_percorrida,tempo_viagem_carro,estado_porta_malas,tipo_transporte,
-        flag_estrada)
-      VALUES('SP', 'São Paulo', 
-      '${x[0]}','${da}', '${dados_recebidos[dados_recebidos.length-1]}','Sim','${dados_recebidos[4]}',
-      '${dados_recebidos[8]}','${dados_recebidos[6]}', 'individual', '${dados_recebidos[7]}');`
-      consulta_banco(consulta_main);
+      
+      dados_dash = [
+        {
+        "id_usuario" :"1",
+        "faixa_idade" : x[0],
+        "estado" :"SP",
+        "cidade" :"São Paulo",
+        "data_consulta" : da,
+        "categoria" : dados_recebidos[dados_recebidos.length-1],
+        "flag_tem_carro" : "",
+        "numero_pessoas_carro" : "",
+        "distancia_percorrida" : "",
+        "tempo_viagem_carro" : "",
+        "estado_porta_malas" : "",
+        "tipo_transporte" : dados_recebidos[3],
+        "finalidade" : "",
+        "flag_estrada" :""
+        }
+      ]
+      requisicao(dados_dash);
+          
+    }else if(dados_recebidos[2]=="Sim"){      
+      dados_dash = [
+        {
+        "id_usuario" :"1",
+        "faixa_idade" : x[0],
+        "estado" :"SP",
+        "cidade" :"São Paulo",
+        "data_consulta" : da,
+        "categoria" : dados_recebidos[dados_recebidos.length-1],
+        "flag_tem_carro" : "Sim",
+        "numero_pessoas_carro" : "",
+        "distancia_percorrida" : dados_recebidos[4],
+        "tempo_viagem_carro" : dados_recebidos[8],
+        "estado_porta_malas" : dados_recebidos[6],
+        "tipo_transporte" : 'individual',
+        "finalidade" : "",
+        "flag_estrada" : dados_recebidos[7]
+        }
+      ]
+      requisicao(dados_dash);
+      
     }else{
-      consulta_main = `INSERT INTO rota_unificada(estado, cidade, faixa_idade, data_consulta, categoria,
-        flag_tem_carro,distancia_percorrida,tipo_transporte,finalidade,
-        flag_estrada)
-      VALUES('SP', 'São Paulo', 
-      '${x[0]}','${da}', '${dados_recebidos[dados_recebidos.length-1]}', 'Não', '${dados_recebidos[6]}',
-      'individual', '${dados_recebidos[3]}', '${dados_recebidos[7]}');`
-      consulta_banco(consulta_main);
+           
+      dados_dash = [
+        {
+        "id_usuario" :"1",
+        "faixa_idade" : x[0],
+        "estado" :"SP",
+        "cidade" :"São Paulo",
+        "data_consulta" : da,
+        "categoria" : dados_recebidos[dados_recebidos.length-1],
+        "flag_tem_carro" : "Não",
+        "numero_pessoas_carro" : "",
+        "distancia_percorrida" : dados_recebidos[6],
+        "tempo_viagem_carro" : "",
+        "estado_porta_malas" : "",
+        "tipo_transporte" : 'individual',
+        "finalidade" : dados_recebidos[3],
+        "flag_estrada" : dados_recebidos[7]
+        }
+      ]
+      requisicao(dados_dash);
     }  
     
   });

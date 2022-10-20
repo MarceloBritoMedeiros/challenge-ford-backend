@@ -16,6 +16,7 @@ function requisicao(valor){
     json: true,  
     body: valor
     }, function (error, response, body){
+        console.log(valor)
         console.log("requisição enviada");
     });
 }
@@ -29,6 +30,7 @@ app.get('/', (req,res) => {
 app.post('/api/book', (req, res) => {    
     var horas = new Date().getHours()
     var minutos = new Date().getMinutes()
+    var horas_ = horas+(minutos/100)
     var da;
     if(minutos>=0 && minutos<30){
       da = `${horas}:00-${horas}:30`
@@ -57,7 +59,8 @@ app.post('/api/book', (req, res) => {
         "estado_porta_malas" : "",
         "tipo_transporte" : dados_recebidos[3],
         "finalidade" : "",
-        "flag_estrada" :""
+        "flag_estrada" :"",
+        "hora":horas_
         }
       ]
       requisicao(dados_dash);
@@ -72,13 +75,14 @@ app.post('/api/book', (req, res) => {
         "data_consulta" : da,
         "categoria" : dados_recebidos[dados_recebidos.length-1],
         "flag_tem_carro" : "Sim",
-        "numero_pessoas_carro" : "",
+        "numero_pessoas_carro" : dados_recebidos[3],
         "distancia_percorrida" : dados_recebidos[4],
         "tempo_viagem_carro" : dados_recebidos[8],
         "estado_porta_malas" : dados_recebidos[6],
         "tipo_transporte" : 'individual',
         "finalidade" : "",
-        "flag_estrada" : dados_recebidos[7]
+        "flag_estrada" : dados_recebidos[7],
+        "hora":horas_
         }
       ]
       requisicao(dados_dash);
@@ -94,13 +98,14 @@ app.post('/api/book', (req, res) => {
         "data_consulta" : da,
         "categoria" : dados_recebidos[dados_recebidos.length-1],
         "flag_tem_carro" : "Não",
-        "numero_pessoas_carro" : "",
+        "numero_pessoas_carro" : dados_recebidos[4],
         "distancia_percorrida" : dados_recebidos[6],
         "tempo_viagem_carro" : "",
         "estado_porta_malas" : "",
         "tipo_transporte" : 'individual',
         "finalidade" : dados_recebidos[3],
-        "flag_estrada" : dados_recebidos[7]
+        "flag_estrada" : dados_recebidos[7],
+        "hora":horas_
         }
       ]
       requisicao(dados_dash);

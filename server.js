@@ -28,7 +28,7 @@ app.get('/', (req,res) => {
 });      
 
 app.post('/api/book', (req, res) => {    
-    var horas = new Date().getHours()
+    var horas = new Date().getHours()-3
     var minutos = new Date().getMinutes()
     var horas_ = horas+(minutos/100)
     var da;
